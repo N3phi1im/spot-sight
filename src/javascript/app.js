@@ -6,8 +6,8 @@
 	function Config($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider, $mdThemingProvider, $mdIconProvider) {
 		$stateProvider.state('Home',{
 			url: '/',
-			templateUrl: 'views/home.html',
-      controller: 'HomeController as vm'
+			templateUrl: 'templates/home.html',
+      controller: 'HomeController as hc'
 		});
 		$urlRouterProvider.otherwise('/');
 		$urlMatcherFactoryProvider.caseInsensitive(true);

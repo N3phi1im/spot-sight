@@ -1,10 +1,17 @@
 "use strict";
 
 require('dotenv').config({silent: true});
-let express = require('express');
-let bodyParser = require('body-parser');
-let app = express();
-let port = process.env.PORT || 3000;
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+var port = process.env.PORT || 3000;
+var mongoose = require('mongoose');
+var passport = require('passport');
+
+require('./models/users');
+require('./config/passport');
+
+mongoose.connect(process.env.MONGODB);
 
 app.set('views', './views');
 app.engine('.html', require('ejs').renderFile);
@@ -18,6 +25,10 @@ app.set('view options', {
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+var userRoutes = require('./routes/userRoutes');
+app.use('/users', userRoutes);
+
 
 app.get('/*', function(req, res) {
 	res.render('index');

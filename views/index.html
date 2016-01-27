@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html ng-app="app" ng-cloak>
   <head>
     <title>spot-sight-test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,19 +10,20 @@
     <link rel="stylesheet" type="text/css" href="/css/site.min.css">
   </head>
   <body>
-    <div layout="column" layout-fill ng-controller="DialogController">
+    <div layout="column" layout-fill ng-controller="DialogController as vm">
       <md-toolbar>
         <div class="md-toolbar-tools">
           <span>Spot Sight</span>
-          <!-- fill up the space between left and right area -->
           <span flex></span>
-          <md-button ng-click="showTabDialog($event)">
+          {{vm.status.username.charAt(0).toUpperCase() + vm.status.username.slice(1)}}
+          <md-button ng-hide="vm.status.isLoggedIn === true" ng-click="showTabDialog($event)">
             Login
+          </md-button>
+          <md-button ng-show="vm.status.isLoggedIn === true" ng-click="vm.logout()">
+            Logout
           </md-button>
         </div>
       </md-toolbar>
-    </div>
-    <div class="md-padding dialogdemoBasicUsage" id="popupContainer" ng-cloak="">
     </div>
     <ui-view></ui-view>
     <!-- Ext Libs -->

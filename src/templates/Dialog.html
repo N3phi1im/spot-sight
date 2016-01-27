@@ -1,49 +1,53 @@
 <md-dialog>
-  <form>
-  <md-toolbar layout="row">
-    <div class="md-toolbar-tools">
-      <h2>Login or Register</h2>
-    </div>
-    <div layout layout-align="end center">
-      <md-button class="md-icon-button" ng-click="cancel()">
-        <md-icon class="material-icons md-dark" aria-label="Close dialog">close</md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
-  <md-dialog-content style="max-width:800px;max-height:810px;min-width:400px;">
-    <md-tabs md-dynamic-height md-border-bottom>
-      <md-tab label="Login">
-        <md-content class="md-padding">
-          <md-input-container>
-            <label>Username:</label>
-            <input type="text" placeholder="Username"/>
-          </md-input-container>
-          <br>
-          <md-input-container>
-            <label>Password:</label>
-            <input type="password" placeholder="Password"/>
-          </md-input-container>
-        </md-content>
-      </md-tab>
-      <md-tab label="Register">
-        <md-content class="md-padding">
-          <md-input-container>
-            <label>Username:</label>
-            <input type="text" placeholder="Username"/>
-          </md-input-container>
-          <br>
-          <md-input-container>
-            <label>Password:</label>
-            <input type="password" placeholder="Password"/>
-          </md-input-container>
-          <br>
-          <md-input-container>
-            <label>Confirm Password:</label>
-            <input type="password" placeholder="Confirm Password"/>
-          </md-input-container>
-        </md-content>
-      </md-tab>
-    </md-tabs>
-  </md-dialog-content>
-</form>
+    <md-toolbar layout="row">
+      <div class="md-toolbar-tools">
+        <h2>Login or Register</h2>
+      </div>
+      <div layout layout-align="end center">
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon class="material-icons md-dark" aria-label="Close dialog">close</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="max-width:800px;max-height:810px;min-width:400px;">
+      <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Login">
+          <md-content class="md-padding">
+            <form ng-submit="vm.login()">
+              <md-input-container>
+                <label>Username:</label>
+                <input ng-model="vm.user.username" type="text" placeholder="Username"/>
+              </md-input-container>
+              <br>
+              <md-input-container>
+                <label>Password:</label>
+                <input ng-model="vm.user.password" type="password" placeholder="Password"/>
+              </md-input-container>
+              <md-button type="submit">Submit</md-button>
+            </form>
+          </md-content>
+        </md-tab>
+        <md-tab label="Register">
+          <md-content class="md-padding">
+            <form ng-submit="vm.register()">
+              <md-input-container>
+                <label>Username:</label>
+                <input ng-model="vm.user.username" type="text" placeholder="Username"/>
+              </md-input-container>
+              <br>
+              <md-input-container>
+                <label>Password:</label>
+                <input ng-model="vm.user.password" type="password" placeholder="Password"/>
+              </md-input-container>
+              <br>
+              <md-input-container>
+                <label>Confirm Password:</label>
+                <input ng-model="vm.user.c_password" type="password" placeholder="Confirm Password"/>
+              </md-input-container>
+              <md-button type="submit">Submit</md-button>
+            </form>
+          </md-content>
+        </md-tab>
+      </md-tabs>
+    </md-dialog-content>
 </md-dialog>

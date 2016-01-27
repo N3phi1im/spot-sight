@@ -3,7 +3,8 @@
 	angular.module('app')
 	.controller('HomeController', HomeController);
 
-	function HomeController() {
-		var vm = this;
+	function HomeController(UserService) {
+		var hc = this;
+		hc.status = UserService.status;
 	}
 })();
