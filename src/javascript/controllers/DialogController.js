@@ -17,7 +17,7 @@
         $mdDialog.show({
           controllerAs: 'vm',
           controller: DialogController,
-          templateUrl: 'templates/Dialog.html',
+          templateUrl: 'views/Dialog.html',
           parent: angular.element(document.body),
           targetEvent: ev,
           clickOutsideToClose: true

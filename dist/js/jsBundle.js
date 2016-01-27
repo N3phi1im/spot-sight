@@ -6,16 +6,16 @@
     function Config($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider, $mdThemingProvider, $mdIconProvider) {
         $stateProvider.state('Home', {
             url: '/',
-            templateUrl: 'templates/home.html',
-            controller: 'HomeController as hc'
+            templateUrl: 'views/home.html',
+            controller: 'HomeController as vm'
         });
         $urlRouterProvider.otherwise('/');
         $urlMatcherFactoryProvider.caseInsensitive(true);
         $urlMatcherFactoryProvider.strictMode(false);
         $locationProvider.html5Mode(true);
         $mdThemingProvider.theme('default')
-            .primaryPalette('deep-orange')
-            .accentPalette('deep-purple');
+            .primaryPalette('deep-purple')
+            .accentPalette('deep-orange');
         $mdIconProvider.defaultFontSet('material-icons');
     }
 })();
@@ -39,7 +39,7 @@
                 $mdDialog.show({
                     controllerAs: 'vm',
                     controller: DialogController,
-                    templateUrl: 'templates/Dialog.html',
+                    templateUrl: 'views/Dialog.html',
                     parent: angular.element(document.body),
                     targetEvent: ev,
                     clickOutsideToClose: true
@@ -86,8 +86,8 @@
         .controller('HomeController', HomeController);
 
     function HomeController(UserService) {
-        var hc = this;
-        hc.status = UserService.status;
+        var vm = this;
+        vm.status = UserService.status;
     }
 })();
 

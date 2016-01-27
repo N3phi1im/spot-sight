@@ -4,7 +4,7 @@
 	.controller('HomeController', HomeController);
 
 	function HomeController(UserService) {
-		var hc = this;
-		hc.status = UserService.status;
+		var vm = this;
+		vm.status = UserService.status;
 	}
 })();
