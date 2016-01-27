@@ -14,8 +14,8 @@
 		$urlMatcherFactoryProvider.strictMode(false);
 		$locationProvider.html5Mode(true);
 		$mdThemingProvider.theme('default')
-    .primaryPalette('deep-purple')
-    .accentPalette('deep-orange');
+    .primaryPalette('deep-orange')
+    .accentPalette('deep-purple');
 		$mdIconProvider.defaultFontSet('material-icons');
 	}
 })();
