@@ -85,9 +85,38 @@
     angular.module('app')
         .controller('HomeController', HomeController);
 
-    function HomeController(UserService) {
+    function HomeController(UserService, HomeFactory) {
         var vm = this;
+        vm.list = [];
+        vm.open = false;
         vm.status = UserService.status;
+        vm.isOpen = false;
+
+        vm.add_contact = function(id) {
+            console.log(vm.status);
+            var user = {
+                add_id: id,
+                logged_in_id: vm.status._id
+            };
+            HomeFactory.add_contact(user).then(function(res) {
+                vm.list.length = 0;
+            });
+        };
+
+        vm.look = function(search) {
+            vm.list.length = 0;
+            HomeFactory.contact_list_search(search).then(function(res) {
+                for (var i = 0; i < res.length; i++) {
+                    vm.list.push(res[i]);
+                }
+            });
+        };
+
+        vm.fab = {
+            isOpen: false,
+            count: 0,
+        };
+
     }
 })();
 
@@ -96,10 +125,28 @@
     angular.module('app')
         .factory('HomeFactory', HomeFactory);
 
-    function HomeFactory($http, $q) {
+    function HomeFactory($http, $q, UserService) {
         var o = {};
-
+        o.contact_list_search = contact_list_search;
+        o.add_contact = add_contact;
         return o;
+
+        function contact_list_search(search) {
+            var q = $q.defer();
+            $http.post('/users/search', search).success(function(res) {
+                q.resolve(res);
+            });
+            return q.promise;
+        }
+
+        function add_contact(user) {
+            var q = $q.defer();
+            $http.post('/users/add', user).success(function(res) {
+                q.resolve(res);
+            });
+            return q.promise;
+        }
+
     }
 })();
 
@@ -136,6 +183,7 @@
             o.status.isLoggedIn = true;
             o.status.callid = getCallId();
             o.status.username = getUserName();
+            o.status._id = getId();
         }
         o.setToken = setToken;
         o.getToken = getToken;
@@ -160,7 +208,7 @@
         function register(user) {
             var q = $q.defer();
             $http.post('/users/register', user).success(function(res) {
-                o.status.isLoggedIn = true;
+                o.login(user);
                 q.resolve();
             });
             return q.promise;
@@ -170,6 +218,7 @@
             localStorage.setItem('token', token);
             o.status.callid = getCallId();
             o.status.username = getUserName();
+            o.status._id = getId();
         }
 
         function getToken() {
@@ -182,6 +231,10 @@
 
         function getUserName() {
             return JSON.parse(atob(getToken().split('.')[1])).username;
+        }
+
+        function getId() {
+            return JSON.parse(atob(getToken().split('.')[1]))._id;
         }
     }
 })();

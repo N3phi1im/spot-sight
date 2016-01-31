@@ -6,6 +6,9 @@ var Uuid = require('uuid');
 
 var UserSchema = new mongoose.Schema({
     username: { type: String, unique: true, lowercase: true },
+    name_first: { type: String, lowercase: true},
+    name_last: { type: String, lowercase: true},
+    contacts_list: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     passwordHash: String,
     salt: String,
     callid: {type: String, 'default': Uuid.v4()}

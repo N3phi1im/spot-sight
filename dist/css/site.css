@@ -1,19 +1,25 @@
-.dialogdemoBasicUsage #popupContainer {
-  position: relative;
-}
-
-.dialogdemoBasicUsage .footer {
-  width: 100%;
-  text-align: center;
-  margin-left: 20px;
-}
-
-.dialogdemoBasicUsage .footer,
-.dialogdemoBasicUsage .footer > code {
-  font-size: 0.8em;
-  margin-top: 50px;
-}
-
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
+}
+
+.shadow_text {
+  text-shadow: 1px 2px 3px rgba(150, 150, 150, 0.5);
+}
+
+.contact_fab md-fab-toolbar.md-right md-fab-trigger.align-with-text {
+  left: 7px;
+}
+
+.contact_card {
+  width: 60%;
+  height: 90%;
+}
+
+.music_card {
+  width: 40%;
+  height: 90%;
+}
+
+.divider_h {
+  height: 75%;
 }

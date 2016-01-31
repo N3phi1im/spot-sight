@@ -10,6 +10,7 @@
 			o.status.isLoggedIn = true;
 			o.status.callid = getCallId();
 			o.status.username = getUserName();
+			o.status._id = getId();
 		}
 		o.setToken = setToken;
 		o.getToken = getToken;
@@ -34,7 +35,7 @@
 		function register(user) {
 			var q = $q.defer();
 			$http.post('/users/register', user).success(function(res) {
-				o.status.isLoggedIn = true;
+				o.login(user);
 				q.resolve();
 			});
 			return q.promise;
@@ -44,6 +45,7 @@
 			localStorage.setItem('token', token);
 			o.status.callid = getCallId();
 			o.status.username = getUserName();
+			o.status._id = getId();
 		}
 
 		function getToken() {
@@ -56,6 +58,10 @@
 
 		function getUserName() {
 			return JSON.parse(atob(getToken().split('.')[1])).username;
+		}
+
+		function getId() {
+			return JSON.parse(atob(getToken().split('.')[1]))._id;
 		}
 	}
 })();
