@@ -9,12 +9,13 @@
     vm.open = false;
     vm.status = UserService.status;
     vm.isOpen = false;
+    vm.getAll = HomeFactory.get_contacts;
+    // vm.getAll();
 
     vm.add_contact = function(id) {
-      console.log(vm.status);
       var user = {
 				add_id: id,
-				logged_in_id: vm.status._id
+				logged_in_id: vm.status.id
 			};
       HomeFactory.add_contact(user).then(function(res) {
         vm.list.length = 0;

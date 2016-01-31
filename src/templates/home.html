@@ -21,7 +21,12 @@
       <div ng-repeat="r in vm.list" layout>
         <md-card layout layout-align="start center" layout-fill class="md-whiteframe-2dp">
           <md-icon layout class="material-icons md-avatar">face</md-icon>
-          <h3 layout flex><label>Username:</label> {{r.username}}</h3><h5 layout flex><label>Full Name:</label>{{r.name_first}} {{r.name_last}}</h5>
+          <h3 layout flex>
+            <label>Username:</label>
+            {{r.username}}</h3>
+          <h5 layout flex>
+            <label>Full Name:</label>{{r.name_first}}
+            {{r.name_last}}</h5>
           <md-button ng-click="vm.add_contact(r._id)" class="md-accent md-raised">Add</md-button>
         </md-card>
       </div>

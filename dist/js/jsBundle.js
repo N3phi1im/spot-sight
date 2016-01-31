@@ -91,12 +91,13 @@
         vm.open = false;
         vm.status = UserService.status;
         vm.isOpen = false;
+        vm.getAll = HomeFactory.get_contacts;
+        // vm.getAll();
 
         vm.add_contact = function(id) {
-            console.log(vm.status);
             var user = {
                 add_id: id,
-                logged_in_id: vm.status._id
+                logged_in_id: vm.status.id
             };
             HomeFactory.add_contact(user).then(function(res) {
                 vm.list.length = 0;
@@ -129,6 +130,7 @@
         var o = {};
         o.contact_list_search = contact_list_search;
         o.add_contact = add_contact;
+        o.get_contacts = get_contacts;
         return o;
 
         function contact_list_search(search) {
@@ -147,6 +149,14 @@
             return q.promise;
         }
 
+        function get_contacts() {
+            var q = $q.defer();
+            $http.get('/users/contacts').success(function(res) {
+                q.resolve(res);
+            });
+            return q.promise;
+        }
+
     }
 })();
 
@@ -155,15 +165,14 @@
     angular.module('app')
         .factory('HTTPFactory', HTTPFactory);
 
-    function HTTPFactory($http, $q) {
+    function HTTPFactory($window, $http, $q) {
         return {
             request: function(config) {
                 config.headers = config.headers || {};
                 config.headers['Accepts'] = 'application/json';
                 config.headers['Content-Type'] = 'application/json';
                 if ($window.localStorage.getItem('token')) {
-                    config.headers['Authorization'] = 'Bearer ' +
-                        $window.localStorage.getItem('token');
+                    config.headers.authorization = "Bearer " + $window.localStorage.getItem('token');
                 }
                 return config;
             }
@@ -183,7 +192,7 @@
             o.status.isLoggedIn = true;
             o.status.callid = getCallId();
             o.status.username = getUserName();
-            o.status._id = getId();
+            o.status.id = getId();
         }
         o.setToken = setToken;
         o.getToken = getToken;
@@ -218,7 +227,7 @@
             localStorage.setItem('token', token);
             o.status.callid = getCallId();
             o.status.username = getUserName();
-            o.status._id = getId();
+            o.status.id = getId();
         }
 
         function getToken() {
@@ -234,7 +243,7 @@
         }
 
         function getId() {
-            return JSON.parse(atob(getToken().split('.')[1]))._id;
+            return JSON.parse(atob(getToken().split('.')[1])).id;
         }
     }
 })();

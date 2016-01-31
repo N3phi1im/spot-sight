@@ -7,10 +7,10 @@
       vm.status = UserService.status;
 
       vm.logout = function() {
-    			localStorage.removeItem('token');
-          vm.status.isLoggedIn = false;
-    			vm.status.callid = null;
-    			vm.status.username = null;
+        localStorage.removeItem('token');
+        vm.status.isLoggedIn = false;
+        vm.status.callid = null;
+        vm.status.username = null;
       };
 
       $scope.showTabDialog = function(ev) {
