@@ -12,15 +12,24 @@ var auth = jwt({
 });
 
 router.post('/register', function(req, res, next) {
-  var user = new User();
-  user.username = req.body.username;
-  user.name_first = req.body.name_first;
-  user.name_last = req.body.name_last;
-  user.setPassword(req.body.password);
-  user.save(function(err, user) {
-    if (err) return next(err);
-    res.send('Registration Complete. Please login.');
-  });
+  User.findOne({username: req.body.username})
+  .exec(function(err, user) {
+    if(user) {
+      return res.status(400).send({message : 'Username is already taken.'});
+    }
+    else {
+      var user = new User();
+      user.username = req.body.username;
+      user.name_first = req.body.name_first;
+      user.name_last = req.body.name_last;
+      user.setPassword(req.body.password);
+      user.save(function(err, user) {
+        if (err) return next(err);
+        res.send('Registration Complete. Please login.');
+      });
+    }
+  })
+
 });
 
 router.post('/login', function(req, res, next) {
@@ -69,5 +78,8 @@ router.get('/contacts', auth, function(req, res, next) {
     });
 });
 
+router.use(function(err, req, res, next) {
+  res.status(500).send(err);
+});
 
 module.exports = router;
