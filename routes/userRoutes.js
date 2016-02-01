@@ -2,9 +2,14 @@
 var express = require('express');
 var passport = require('passport');
 var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
+var jwt = require('express-jwt');
 var User = mongoose.model('User');
 var router = express.Router();
+
+var auth = jwt({
+  userProperty: 'payload',
+  secret: process.env.SECRET_KEY
+});
 
 router.post('/register', function(req, res, next) {
   var user = new User();
@@ -30,7 +35,7 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-router.post('/search', function(req, res, next) {
+router.post('/search', auth, function(req, res, next) {
   User.find({
       $text: {
         $search: req.body.search
@@ -42,7 +47,7 @@ router.post('/search', function(req, res, next) {
     });
 });
 
-router.post('/add', function(req, res, next) {
+router.post('/add', auth, function(req, res, next) {
   User.findOne({
       _id: req.body.logged_in_id
     })
@@ -54,17 +59,13 @@ router.post('/add', function(req, res, next) {
     });
 });
 
-router.get('/contacts', function(req, res, next) {
+router.get('/contacts', auth, function(req, res, next) {
   User.findOne({
-      _id: req.body.logged_in_id
+      _id: req['payload'].id
     })
-    .populate('contacts_list')
-    .exec(function(err, user) {
-      User.populate(user.contacts_list, {
-        select: 'username name_first name_last callid'
-      }, function(err, out) {
-        res.json(user);
-      });
+    .populate('contacts_list', 'username name_first name_last callid')
+    .exec(function(err, users) {
+        res.send(users.contacts_list);
     });
 });
 

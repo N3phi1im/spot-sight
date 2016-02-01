@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('app')
-    .controller('DialogController', function($scope, $mdDialog, UserService) {
+    .controller('DialogController', function($scope, $mdDialog, $state, UserService) {
 
       var vm = this;
       vm.status = UserService.status;
@@ -11,6 +11,8 @@
         vm.status.isLoggedIn = false;
         vm.status.callid = null;
         vm.status.username = null;
+        vm.status.id = null;
+        $state.reload();
       };
 
       $scope.showTabDialog = function(ev) {
@@ -25,7 +27,7 @@
       };
     });
 
-  function DialogController($scope, $mdDialog, $mdToast, UserService) {
+  function DialogController($scope, $mdDialog, $mdToast, $state, UserService) {
     var vm = this;
     vm.user = {};
     vm.status = UserService.status;
@@ -52,6 +54,7 @@
       UserService.login(vm.user).then(function() {
         $mdDialog.hide();
         $mdToast.show($mdToast.simple().textContent('Welcome back ' + vm.status.username.charAt(0).toUpperCase() + vm.status.username.slice(1) + '!'));
+        $state.reload();
       });
     };
 

@@ -3,7 +3,7 @@
 	angular.module('app')
 	.factory('HTTPFactory', HTTPFactory);
 
-	function HTTPFactory($window, $http, $q) {
+	function HTTPFactory($window) {
 		return {
       request: function(config) {
 				config.headers = config.headers || {};

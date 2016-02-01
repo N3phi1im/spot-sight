@@ -3,7 +3,7 @@
     angular.module('app', ['ui.router', 'ngMaterial'])
         .config(Config);
 
-    function Config($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider, $mdThemingProvider, $mdIconProvider) {
+    function Config($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider, $mdThemingProvider, $mdIconProvider, $httpProvider) {
         $stateProvider.state('Home', {
             url: '/',
             templateUrl: 'views/home.html',
@@ -13,6 +13,7 @@
         $urlMatcherFactoryProvider.caseInsensitive(true);
         $urlMatcherFactoryProvider.strictMode(false);
         $locationProvider.html5Mode(true);
+        $httpProvider.interceptors.push('HTTPFactory');
         $mdThemingProvider.theme('default')
             .primaryPalette('deep-orange')
             .accentPalette('deep-purple');
@@ -23,7 +24,7 @@
 (function() {
     'use strict';
     angular.module('app')
-        .controller('DialogController', function($scope, $mdDialog, UserService) {
+        .controller('DialogController', function($scope, $mdDialog, $state, UserService) {
 
             var vm = this;
             vm.status = UserService.status;
@@ -33,6 +34,8 @@
                 vm.status.isLoggedIn = false;
                 vm.status.callid = null;
                 vm.status.username = null;
+                vm.status.id = null;
+                $state.reload();
             };
 
             $scope.showTabDialog = function(ev) {
@@ -47,7 +50,7 @@
             };
         });
 
-    function DialogController($scope, $mdDialog, $mdToast, UserService) {
+    function DialogController($scope, $mdDialog, $mdToast, $state, UserService) {
         var vm = this;
         vm.user = {};
         vm.status = UserService.status;
@@ -74,6 +77,7 @@
             UserService.login(vm.user).then(function() {
                 $mdDialog.hide();
                 $mdToast.show($mdToast.simple().textContent('Welcome back ' + vm.status.username.charAt(0).toUpperCase() + vm.status.username.slice(1) + '!'));
+                $state.reload();
             });
         };
 
@@ -88,11 +92,23 @@
     function HomeController(UserService, HomeFactory) {
         var vm = this;
         vm.list = [];
-        vm.open = false;
+        vm.contacts = [];
         vm.status = UserService.status;
         vm.isOpen = false;
-        vm.getAll = HomeFactory.get_contacts;
-        // vm.getAll();
+        vm.is = false;
+
+        vm.open = function() {
+            vm.list.length = 0;
+            vm.is = false;
+        }
+
+        vm.getAll = function() {
+            HomeFactory.get_contacts().then(function(res) {
+                for (var i = 0; i < res.length; i++) {
+                    vm.contacts.push(res[i]);
+                }
+            });
+        };
 
         vm.add_contact = function(id) {
             var user = {
@@ -100,6 +116,7 @@
                 logged_in_id: vm.status.id
             };
             HomeFactory.add_contact(user).then(function(res) {
+                vm.getAll();
                 vm.list.length = 0;
             });
         };
@@ -113,11 +130,9 @@
             });
         };
 
-        vm.fab = {
-            isOpen: false,
-            count: 0,
-        };
-
+        if (localStorage.token) {
+            vm.getAll();
+        }
     }
 })();
 
@@ -165,7 +180,7 @@
     angular.module('app')
         .factory('HTTPFactory', HTTPFactory);
 
-    function HTTPFactory($window, $http, $q) {
+    function HTTPFactory($window) {
         return {
             request: function(config) {
                 config.headers = config.headers || {};
@@ -185,7 +200,7 @@
     angular.module('app')
         .factory('UserService', UserService);
 
-    function UserService($http, $q, $window) {
+    function UserService($http, $q, $window, $mdToast) {
         var o = {};
         o.status = {};
         if (getToken()) {
@@ -210,6 +225,8 @@
                 setToken(res.token);
                 o.status.isLoggedIn = true;
                 q.resolve();
+            }).error(function(res) {
+                $mdToast.show($mdToast.simple().textContent(res.message));
             });
             return q.promise;
         }
@@ -219,6 +236,8 @@
             $http.post('/users/register', user).success(function(res) {
                 o.login(user);
                 q.resolve();
+            }).error(function(res) {
+                $mdToast.show($mdToast.simple().textContent(res.message));
             });
             return q.promise;
         }

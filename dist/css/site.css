@@ -25,6 +25,10 @@
   height: 90%;
 }
 
-.divider_h {
-  height: 75%;
+._height {
+  height: 10px;
+}
+
+.error_text {
+  color: #FF0000;
 }

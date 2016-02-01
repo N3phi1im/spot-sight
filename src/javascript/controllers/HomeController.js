@@ -6,11 +6,23 @@
   function HomeController(UserService, HomeFactory) {
     var vm = this;
     vm.list = [];
-    vm.open = false;
+    vm.contacts = [];
     vm.status = UserService.status;
     vm.isOpen = false;
-    vm.getAll = HomeFactory.get_contacts;
-    // vm.getAll();
+    vm.is = false;
+
+    vm.open = function() {
+      vm.list.length = 0;
+      vm.is = false;
+    }
+
+    vm.getAll = function() {
+      HomeFactory.get_contacts().then(function(res) {
+        for (var i = 0; i < res.length; i++) {
+          vm.contacts.push(res[i]);
+        }
+      });
+    };
 
     vm.add_contact = function(id) {
       var user = {
@@ -18,6 +30,7 @@
 				logged_in_id: vm.status.id
 			};
       HomeFactory.add_contact(user).then(function(res) {
+        vm.getAll();
         vm.list.length = 0;
       });
     };
@@ -31,10 +44,8 @@
       });
     };
 
-    vm.fab = {
-      isOpen: false,
-      count: 0,
-    };
-
+    if(localStorage.token) {
+      vm.getAll();
+    }
   }
 })();

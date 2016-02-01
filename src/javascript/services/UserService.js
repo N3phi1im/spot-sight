@@ -3,7 +3,7 @@
   angular.module('app')
     .factory('UserService', UserService);
 
-  function UserService($http, $q, $window) {
+  function UserService($http, $q, $window, $mdToast) {
     var o = {};
     o.status = {};
     if (getToken()) {
@@ -28,6 +28,8 @@
         setToken(res.token);
         o.status.isLoggedIn = true;
         q.resolve();
+      }).error(function(res) {
+        $mdToast.show($mdToast.simple().textContent(res.message));
       });
       return q.promise;
     }
@@ -37,6 +39,8 @@
       $http.post('/users/register', user).success(function(res) {
         o.login(user);
         q.resolve();
+      }).error(function(res) {
+        $mdToast.show($mdToast.simple().textContent(res.message));
       });
       return q.promise;
     }
