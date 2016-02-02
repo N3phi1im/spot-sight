@@ -1,13 +1,17 @@
 (function() {
     'use strict';
     angular.module('app', ['ui.router', 'ngMaterial'])
-        .config(Config);
+        .config(Config)
+        .run(auth);
 
     function Config($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $locationProvider, $mdThemingProvider, $mdIconProvider, $httpProvider) {
         $stateProvider.state('Home', {
             url: '/',
             templateUrl: 'views/home.html',
             controller: 'HomeController as vm'
+        }).state('Welcome', {
+            url: '/welcome',
+            templateUrl: 'views/welcome.html',
         });
         $urlRouterProvider.otherwise('/');
         $urlMatcherFactoryProvider.caseInsensitive(true);
@@ -19,6 +23,22 @@
             .accentPalette('deep-purple');
         $mdIconProvider.defaultFontSet('material-icons');
     }
+
+    auth.$inject = ['$rootScope', '$location', '$state', 'UserService'];
+
+    function auth($rootScope, $location, $state, UserService) {
+        $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+            var userInfo = UserService.status;
+            if (!userInfo.isLoggedIn) {
+                var welcome = toState.name === "Welcome";
+                if (welcome) {
+                    return;
+                }
+                $location.url('/welcome');
+            }
+        });
+    }
+
 })();
 
 (function() {
@@ -35,7 +55,7 @@
                 vm.status.callid = null;
                 vm.status.username = null;
                 vm.status.id = null;
-                $state.reload();
+                $state.go('Welcome');
             };
 
             $scope.showTabDialog = function(ev) {
@@ -77,7 +97,7 @@
             UserService.login(vm.user).then(function() {
                 $mdDialog.hide();
                 $mdToast.show($mdToast.simple().textContent('Welcome back ' + vm.status.username.charAt(0).toUpperCase() + vm.status.username.slice(1) + '!'));
-                $state.reload();
+                $state.go('Home');
             });
         };
 

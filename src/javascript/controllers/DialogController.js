@@ -12,7 +12,7 @@
         vm.status.callid = null;
         vm.status.username = null;
         vm.status.id = null;
-        $state.reload();
+        $state.go('Welcome');
       };
 
       $scope.showTabDialog = function(ev) {
@@ -54,7 +54,7 @@
       UserService.login(vm.user).then(function() {
         $mdDialog.hide();
         $mdToast.show($mdToast.simple().textContent('Welcome back ' + vm.status.username.charAt(0).toUpperCase() + vm.status.username.slice(1) + '!'));
-        $state.reload();
+        $state.go('Home');
       });
     };
 
