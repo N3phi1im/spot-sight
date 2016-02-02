@@ -14,7 +14,7 @@ var gulp          = require("gulp"),
     ngAnnotate    = require('gulp-ng-annotate');
 
 gulp.task('images', function() {
-	return gulp.src('./src/img/**/*')
+	return gulp.src('./src/images/**/*')
 	.pipe(cache(imagemin({optimizationLevel: 5, progressive: true, interlaced: true})))
 	.pipe(gulp.dest('./dist/img'));
 });
